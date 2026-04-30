@@ -1,1 +1,2 @@
-# truemath-preview
+# truemath-website
+Truemath's public facing website
