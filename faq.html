@@ -55,6 +55,8 @@
       .faq-card:hover { border-color: var(--border-purple); }
       .mobile-menu { background: rgba(18, 17, 28, 0.98); }
       .hamburger-line { background: var(--ink); }
+      .faq-search-input:focus { background: var(--bg-white); }
+      .faq-search-shortcut { background: rgba(158, 136, 180, 0.12); }
     }
 
     html { scroll-behavior: smooth; }
@@ -259,6 +261,104 @@
       background: var(--purple-tint);
       border-left-color: var(--purple);
     }
+
+    /* SEARCH */
+    .faq-search-wrap {
+      position: relative;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .faq-search-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .faq-search-input-wrap {
+      position: relative;
+    }
+    .faq-search-input {
+      width: 100%;
+      padding: 9px 32px 9px 32px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.15s, background 0.15s;
+      box-sizing: border-box;
+    }
+    .faq-search-input::placeholder { color: var(--ink-muted); }
+    .faq-search-input:focus {
+      outline: none;
+      border-color: var(--purple);
+      background: #fff;
+    }
+    .faq-search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink-muted);
+      pointer-events: none;
+    }
+    .faq-search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--ink-muted);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: background 0.15s;
+    }
+    .faq-search-clear:hover { background: var(--ink); }
+    .faq-search-clear.visible { display: flex; }
+    .faq-search-shortcut {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-muted);
+      background: var(--purple-tint);
+      border: 1px solid var(--border-purple);
+      border-radius: 4px;
+      padding: 2px 6px;
+      pointer-events: none;
+    }
+    .faq-search-shortcut.hidden { display: none; }
+
+    /* SEARCH FILTER STATES */
+    .faq-card.search-hidden,
+    .faq-section.search-hidden { display: none; }
+    .faq-no-results {
+      display: none;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--ink-muted);
+      font-size: 14px;
+      background: var(--bg-tint-warm);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .faq-no-results.visible { display: block; }
+    .faq-no-results strong { color: var(--ink); display: block; margin-bottom: 4px; font-size: 15px; }
 
     /* FAQ CONTENT */
     .faq-section { margin-bottom: 64px; }
@@ -576,10 +676,29 @@
         <li><a href="#trust-privacy" data-section="trust-privacy">Trust and Privacy</a></li>
         <li><a href="#developers" data-section="developers">For Developers</a></li>
       </ul>
+
+      <div class="faq-search-wrap">
+        <label class="faq-search-label" for="faq-search">Search</label>
+        <div class="faq-search-input-wrap">
+          <span class="faq-search-icon">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="5.5" cy="5.5" r="4" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 8.5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </span>
+          <input type="search" id="faq-search" class="faq-search-input" placeholder="Search the FAQ" autocomplete="off" spellcheck="false">
+          <span class="faq-search-shortcut" id="faq-search-shortcut">⌘K</span>
+          <button type="button" class="faq-search-clear" id="faq-search-clear" aria-label="Clear search">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M2 2l5 5M7 2l-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
     </aside>
 
     <!-- CONTENT -->
     <main class="faq-content">
+
+      <div class="faq-no-results" id="faq-no-results" role="status" aria-live="polite">
+        <strong>No questions match that search.</strong>
+        Try fewer or different words, or clear the search to see everything.
+      </div>
 
       <!-- ============ GETTING STARTED ============ -->
       <section id="getting-started" class="faq-section">
@@ -916,8 +1035,8 @@
   <div class="faq-cta">
     <div class="faq-cta-content">
       <h2 class="faq-cta-headline">Still have questions?</h2>
-      <p class="faq-cta-subhead">The fastest way to find out if TrueMath fits your work is to try it.</p>
-      <a href="https://app.truemath.ai/signup" class="btn-cta">Get invited</a>
+      <p class="faq-cta-subhead">Get in touch and we'll answer them.</p>
+      <a href="https://app.truemath.ai/contact" class="btn-cta">Get in touch</a>
     </div>
   </div>
 
@@ -1012,6 +1131,97 @@
         } else if (target && target.classList.contains('faq-card')) {
           target.setAttribute('open', '');
         }
+      }
+    })();
+
+    // FAQ search: filter cards and sections by question + answer text
+    (function() {
+      const input = document.getElementById('faq-search');
+      const clearBtn = document.getElementById('faq-search-clear');
+      const shortcut = document.getElementById('faq-search-shortcut');
+      const noResults = document.getElementById('faq-no-results');
+      const cards = document.querySelectorAll('.faq-card');
+      const sections = document.querySelectorAll('.faq-section');
+      if (!input || !cards.length) return;
+
+      // Track each card's pre-search open state so we can restore it on clear
+      const cardOriginalOpen = new WeakMap();
+      cards.forEach(card => cardOriginalOpen.set(card, card.hasAttribute('open')));
+
+      function filter(query) {
+        const q = query.trim().toLowerCase();
+        const hasQuery = q.length > 0;
+
+        // Toggle clear button + shortcut hint visibility
+        clearBtn.classList.toggle('visible', hasQuery);
+        shortcut.classList.toggle('hidden', hasQuery);
+
+        if (!hasQuery) {
+          // Restore everything to original state
+          cards.forEach(card => {
+            card.classList.remove('search-hidden');
+            // Restore original open state
+            if (cardOriginalOpen.get(card)) card.setAttribute('open', '');
+            else card.removeAttribute('open');
+          });
+          sections.forEach(s => s.classList.remove('search-hidden'));
+          noResults.classList.remove('visible');
+          return;
+        }
+
+        // Per-card match: check question summary text + answer text
+        let totalMatches = 0;
+        cards.forEach(card => {
+          const summary = card.querySelector('.faq-question');
+          const answer = card.querySelector('.faq-answer');
+          const haystack = ((summary ? summary.textContent : '') + ' ' + (answer ? answer.textContent : '')).toLowerCase();
+          const matches = haystack.includes(q);
+          card.classList.toggle('search-hidden', !matches);
+          if (matches) {
+            totalMatches++;
+            card.setAttribute('open', '');  // Auto-open matched cards so the answer is visible
+          }
+        });
+
+        // Hide sections whose cards are all hidden
+        sections.forEach(section => {
+          const sectionCards = section.querySelectorAll('.faq-card');
+          const anyVisible = Array.from(sectionCards).some(c => !c.classList.contains('search-hidden'));
+          section.classList.toggle('search-hidden', !anyVisible);
+        });
+
+        noResults.classList.toggle('visible', totalMatches === 0);
+      }
+
+      // Live filter on input
+      input.addEventListener('input', (e) => filter(e.target.value));
+
+      // Clear button
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        filter('');
+        input.focus();
+      });
+
+      // Cmd/Ctrl+K to focus search; Escape to clear when focused
+      document.addEventListener('keydown', (e) => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+          e.preventDefault();
+          input.focus();
+          input.select();
+        } else if (e.key === 'Escape' && document.activeElement === input) {
+          if (input.value) {
+            input.value = '';
+            filter('');
+          } else {
+            input.blur();
+          }
+        }
+      });
+
+      // Detect non-Mac and update shortcut hint accordingly
+      if (!/Mac|iPhone|iPad/.test(navigator.platform)) {
+        shortcut.textContent = 'Ctrl K';
       }
     })();
   </script>
