@@ -267,9 +267,9 @@
     }
 
     .domain-thumb {
-      width: 64px;
-      height: 64px;
-      border-radius: 10px;
+      width: 112px;
+      height: 112px;
+      border-radius: 12px;
       overflow: hidden;
       flex-shrink: 0;
       background: var(--bg-tint-warm);
@@ -283,9 +283,9 @@
 
     /* PLACEHOLDER (for domains without an image yet) */
     .placeholder-thumb {
-      width: 64px;
-      height: 64px;
-      border-radius: 10px;
+      width: 112px;
+      height: 112px;
+      border-radius: 12px;
       flex-shrink: 0;
       background: var(--bg-tint);
       border: 1px solid var(--border-purple);
@@ -293,7 +293,7 @@
       align-items: center;
       justify-content: center;
       font-family: var(--font-mono);
-      font-size: 16px;
+      font-size: 28px;
       font-weight: 500;
       color: var(--purple);
       letter-spacing: 0.04em;
@@ -332,6 +332,9 @@
     .domain-card.coming-soon {
       opacity: 0.65;
       pointer-events: none;
+    }
+    .domain-card.coming-soon .domain-content {
+      padding-right: 90px;
     }
     .domain-card.coming-soon::after {
       content: 'In development';
