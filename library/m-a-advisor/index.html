@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#F7F6F2">
+  <link rel="icon" type="image/png" href="../../TrueMath-Logo-Only-Color_Logo-Only-Color.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" href="../../TrueMath-Logo-Only-White-1000px.png" media="(prefers-color-scheme: dark)">
+  <title>M&amp;A Advisor — TrueMath Library</title>
+  <meta name="description" content="A TrueMath calculation domain for M&amp;A advisors. Valuation, LBO returns, earnouts, seller proceeds, accretion/dilution. Deterministic, auditable, defensible.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #F7F6F2;
+      --bg-white:      #FFFFFF;
+      --bg-tint:       #F0EDFB;
+      --bg-tint-warm:  #F4F3EF;
+      --ink:           #1A1830;
+      --ink-mid:       #3D3B52;
+      --ink-muted:     #9896B0;
+      --purple:        #502878;
+      --purple-bright: #735393;
+      --purple-light:  #B09EC2;
+      --purple-tint:   #EDE9FE;
+      --slate:         #8A9BB8;
+      --border:        rgba(26, 24, 48, 0.1);
+      --border-purple: rgba(80, 40, 120, 0.20);
+      --font-serif:    'Lora', Georgia, serif;
+      --font-sans:     'DM Sans', system-ui, sans-serif;
+      --font-mono:     'DM Mono', monospace;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:            #12111C;
+        --bg-white:      #1C1A2E;
+        --bg-tint:       #1E1B30;
+        --bg-tint-warm:  #181620;
+        --ink:           #EDE9FE;
+        --ink-mid:       #B8B4D4;
+        --ink-muted:     #6E6B8A;
+        --purple:        #9E88B4;
+        --purple-bright: #B9A9C9;
+        --purple-light:  #C4B5FD;
+        --purple-tint:   #1E1840;
+        --slate:         #7A8BA8;
+        --border:        rgba(237, 233, 254, 0.08);
+        --border-purple: rgba(158, 136, 180, 0.30);
+      }
+      nav { background: rgba(18, 17, 28, 0.92); }
+      .calc-card { background: var(--bg-white); }
+      .calc-card:hover { box-shadow: 0 4px 20px rgba(158, 136, 180, 0.15); }
+      .btn-cta { background: #ffffff !important; color: #1A1830 !important; }
+      .btn-cta:hover { background: #EDE9FE !important; color: #1A1830 !important; }
+      footer { border-color: var(--border); }
+      .about-block { background: var(--bg-tint-warm); }
+      .step-num { background: var(--purple-tint); color: var(--purple-light); }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 68px;
+      background: rgba(247, 246, 242, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo img { height: 28px; display: block; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 400; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta { display: flex; align-items: center; gap: 12px; }
+    .btn-ghost { font-family: var(--font-sans); font-size: 14px; color: var(--ink-muted); background: none; border: none; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+    .btn-ghost:hover { color: var(--ink); }
+    .btn-primary { font-family: var(--font-sans); font-size: 14px; font-weight: 500; color: #fff; background: var(--purple); border: none; border-radius: 8px; padding: 9px 20px; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+    .btn-primary:hover { background: var(--purple-bright); transform: translateY(-1px); }
+
+    /* HAMBURGER */
+    .nav-hamburger {
+      display: none;
+      width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer;
+      padding: 0; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px; background: var(--ink);
+      border-radius: 2px; transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      z-index: 99;
+      background: rgba(247, 246, 242, 0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 24px;
+      transform: translateY(-12px);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.25s ease, opacity 0.2s ease, visibility 0s linear 0.25s;
+    }
+    .mobile-menu.is-open {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+      transition: transform 0.25s ease, opacity 0.2s ease, visibility 0s linear 0s;
+    }
+    .mobile-menu-links { list-style: none; display: flex; flex-direction: column; gap: 4px; margin-bottom: 20px; }
+    .mobile-menu-links a {
+      display: block; padding: 12px 4px;
+      font-size: 16px; font-weight: 500; color: var(--ink); text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-menu-links a:hover { color: var(--purple); }
+    .mobile-menu-cta { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 8px; }
+
+    /* MAIN */
+    main { padding-top: 68px; }
+
+    /* HERO (text-only) */
+    .role-hero {
+      padding: 96px 64px 56px;
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+    .role-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--purple);
+      background: var(--purple-tint);
+      border: 1px solid var(--border-purple);
+      border-radius: 100px;
+      padding: 4px 14px;
+      margin-bottom: 24px;
+    }
+    .role-eyebrow-divider { color: var(--purple-light); }
+    .role-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(44px, 6vw, 72px);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 24px;
+      text-wrap: balance;
+    }
+    .role-subhead {
+      font-size: 19px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--ink-mid);
+      max-width: 720px;
+    }
+
+    /* ABOUT TRUEMATH */
+    .about-block {
+      max-width: 1160px;
+      margin: 0 64px 80px;
+      padding: 28px 40px;
+      background: var(--bg-tint-warm);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--purple);
+      border-radius: 4px;
+    }
+    @media (min-width: 1289px) {
+      .about-block { margin-left: auto; margin-right: auto; }
+    }
+    .about-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 8px;
+    }
+    .about-text {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-mid);
+      font-weight: 300;
+      max-width: 880px;
+    }
+    .about-text strong { color: var(--ink); font-weight: 500; }
+
+    /* SAMPLE PROMPT PANEL */
+    .sample-section {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 64px 80px;
+    }
+    .sample-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .sample-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 32px;
+      max-width: 720px;
+    }
+
+    .session-panel {
+      background: linear-gradient(145deg, #3E1F8F 0%, #2A1260 60%, #1A0A40 100%);
+      border-radius: 24px;
+      padding: 32px;
+      position: relative;
+      overflow: visible;
+      box-shadow: 0 16px 56px rgba(62, 31, 143, 0.28), 0 2px 8px rgba(62, 31, 143, 0.15);
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .session-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background-image:
+        linear-gradient(rgba(196, 181, 253, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196, 181, 253, 0.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .session-panel::after {
+      content: '';
+      position: absolute;
+      top: -40px; right: -30px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.22) 0%, transparent 65%);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    .session-image {
+      position: relative;
+      z-index: 5;
+      width: 240px;
+      height: 240px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #1A0A40;
+    }
+    .session-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .session-content {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .prompt-bubble {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(196, 181, 253, 0.12);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .prompt-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(196, 181, 253, 0.7);
+      margin-bottom: 8px;
+    }
+    .prompt-text {
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .answer-bubble {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(80, 40, 120, 0.12));
+      border: 1px solid rgba(196, 181, 253, 0.25);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .answer-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(196, 181, 253, 0.95);
+      margin-bottom: 12px;
+    }
+    .answer-dot {
+      width: 6px; height: 6px;
+      background: #C4B5FD;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(196, 181, 253, 0.6);
+    }
+
+    .waterfall {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .waterfall-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(196, 181, 253, 0.15);
+    }
+    .waterfall-row:last-child {
+      border-bottom: none;
+      padding-top: 10px;
+      margin-top: 4px;
+      border-top: 1px solid rgba(196, 181, 253, 0.4);
+    }
+    .waterfall-label { color: rgba(255, 255, 255, 0.78); }
+    .waterfall-value { color: rgba(255, 255, 255, 0.95); white-space: nowrap; }
+    .waterfall-row strong { color: #C4B5FD; font-weight: 500; }
+    .waterfall-row:last-child .waterfall-label,
+    .waterfall-row:last-child .waterfall-value {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* WHAT YOU CALCULATE */
+    .calc-section {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 64px 80px;
+    }
+    .calc-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .calc-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 12px;
+      max-width: 720px;
+    }
+    .calc-body {
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--ink-mid);
+      font-weight: 300;
+      max-width: 680px;
+      margin-bottom: 40px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .calc-card {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .calc-card:hover {
+      border-color: var(--border-purple);
+      box-shadow: 0 4px 20px rgba(80, 40, 120, 0.10);
+      transform: translateY(-2px);
+    }
+    .calc-card-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+      margin-bottom: 10px;
+    }
+    .calc-card-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink-mid);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+    .calc-card-list { list-style: none; padding: 0; }
+    .calc-card-list li {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--purple);
+      padding: 3px 0;
+      letter-spacing: 0.02em;
+    }
+    .calc-card-list li::before { content: '·  '; color: var(--purple-light); }
+
+    /* HOW IT WORKS */
+    .how-section {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 64px 80px;
+    }
+    .how-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .how-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 3.5vw, 36px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 40px;
+      max-width: 720px;
+    }
+    .step-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+    .step { display: flex; flex-direction: column; gap: 16px; }
+    .step-num {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--purple-tint);
+      border: 1px solid var(--border-purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--purple);
+    }
+    .step-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.005em;
+    }
+    .step-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--ink-mid);
+    }
+
+    /* CTA SECTION */
+    .cta-section { padding: 96px 64px; text-align: center; background: #0F0E1A; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(107,68,196,0.3) 0%, transparent 65%); pointer-events: none; }
+    .cta-box { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
+    .cta-headline { font-family: var(--font-serif); font-size: clamp(28px,4vw,48px); font-weight: 500; color: #fff; margin-bottom: 16px; line-height: 1.2; letter-spacing: -0.01em; }
+    .cta-subhead { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 32px; font-weight: 300; }
+    .btn-cta { font-family: var(--font-sans); font-size: 16px; font-weight: 500; color: #1A1830; background: #fff; border: none; border-radius: 10px; padding: 14px 32px; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.15s; display: inline-block; }
+    .btn-cta:hover { background: var(--purple-tint); transform: translateY(-2px); }
+
+    /* FOOTER */
+    footer {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 32px 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .footer-left { display: flex; align-items: center; gap: 20px; }
+    .footer-logo img { height: 18px; display: block; }
+    .footer-copy { font-size: 12px; color: var(--ink-muted); }
+    .footer-links { list-style: none; display: flex; gap: 24px; }
+    .footer-links a { font-size: 13px; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--ink); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1080px) {
+      .calc-grid { grid-template-columns: repeat(2, 1fr); }
+      .step-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+
+      .role-hero { padding: 56px 24px 40px; }
+      .about-block { margin: 0 24px 56px; padding: 24px 28px; }
+      .sample-section, .calc-section, .how-section { padding: 0 24px 56px; }
+      .cta-section { padding: 60px 24px; }
+      footer { padding: 24px; }
+
+      .session-panel { grid-template-columns: 1fr; gap: 24px; padding: 24px; }
+      .session-image { width: 100%; max-width: 280px; height: 200px; margin: 0 auto; }
+    }
+
+    @media (max-width: 640px) {
+      .calc-grid { grid-template-columns: 1fr; }
+      .step-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="../../" class="nav-logo">
+      <img src="../../TrueMath-Logo-Long-Color_Logo-Long-Color.png" alt="TrueMath">
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../#why">Why TrueMath</a></li>
+      <li><a href="../">Professional Library</a></li>
+      <li><a href="../../#developers">Developers</a></li>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../faq.html">FAQ</a></li>
+      <li><a href="https://truemath.ai/blog">Blog</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="https://app.truemath.ai" class="btn-ghost">Log in</a>
+      <a href="https://app.truemath.ai/signup" class="btn-primary">Talk to us</a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <ul class="mobile-menu-links">
+      <li><a href="../../#why">Why TrueMath</a></li>
+      <li><a href="../">Professional Library</a></li>
+      <li><a href="../../#developers">Developers</a></li>
+      <li><a href="../../#about">About</a></li>
+      <li><a href="../../faq.html">FAQ</a></li>
+      <li><a href="https://truemath.ai/blog">Blog</a></li>
+    </ul>
+    <div class="mobile-menu-cta">
+      <a href="https://app.truemath.ai" class="btn-ghost">Log in</a>
+      <a href="https://app.truemath.ai/signup" class="btn-primary">Talk to us</a>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="role-hero">
+      <span class="role-eyebrow">
+        <span>TrueMath Library</span>
+        <span class="role-eyebrow-divider">·</span>
+        <span>Investment Banking &amp; Private Capital</span>
+      </span>
+      <h1 class="role-headline">M&amp;A Advisor</h1>
+      <p class="role-subhead">
+        The valuation, deal structuring, and returns math sell-side and buy-side advisors run on every engagement. Built for the work, ready to defend in the room.
+      </p>
+    </section>
+
+    <!-- ABOUT TRUEMATH -->
+    <section class="about-block">
+      <span class="about-label">About TrueMath</span>
+      <p class="about-text">
+        TrueMath is the <strong>auditable math engine</strong> for AI-age professionals. AI handles the conversation; TrueMath handles the math. Every answer is deterministic, traceable to its inputs, and ready to share. For M&amp;A advisors, that means valuation, returns, and tax math your client and counterparty can both stake their reputations on.
+      </p>
+    </section>
+
+    <!-- SAMPLE PROMPT -->
+    <section class="sample-section">
+      <span class="sample-label">A representative prompt</span>
+      <h2 class="sample-headline">Run a full seller proceeds waterfall in one prompt.</h2>
+
+      <div class="session-panel">
+        <div class="session-image">
+          <img src="../../M_A_Advisor_Team.jpg" alt="M&amp;A advisor team">
+        </div>
+        <div class="session-content">
+          <div class="prompt-bubble">
+            <div class="prompt-label">You asked</div>
+            <div class="prompt-text">
+              $8M sale of an industrial services business. Advisory fee 5% with $250K floor. $50K legal and accounting. $1.2M senior debt being paid off. Seller carrying $500K note. $300K rollover equity. Allocation: $1.2M tangibles ($800K basis), $400K intangibles, $200K non-compete, balance to goodwill. 23.8% cap gains, 37% ordinary income.
+            </div>
+          </div>
+          <div class="answer-bubble">
+            <div class="answer-label"><span class="answer-dot"></span>TrueMath</div>
+            <div class="waterfall">
+              <div class="waterfall-row"><span class="waterfall-label">Equity Value</span><span class="waterfall-value"><strong>$6,800,000</strong></span></div>
+              <div class="waterfall-row"><span class="waterfall-label">Less: Advisory Fee (5%)</span><span class="waterfall-value">−$400,000</span></div>
+              <div class="waterfall-row"><span class="waterfall-label">Less: Transaction Costs</span><span class="waterfall-value">−$50,000</span></div>
+              <div class="waterfall-row"><span class="waterfall-label">Less: Seller Note</span><span class="waterfall-value">−$500,000</span></div>
+              <div class="waterfall-row"><span class="waterfall-label">Less: Rollover Equity</span><span class="waterfall-value">−$300,000</span></div>
+              <div class="waterfall-row"><span class="waterfall-label">Less: Tax Liability</span><span class="waterfall-value">−$1,580,400</span></div>
+              <div class="waterfall-row"><span class="waterfall-label">Net Cash to Seller</span><span class="waterfall-value"><strong>$3,969,600</strong></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT YOU CALCULATE -->
+    <section class="calc-section">
+      <span class="calc-label">What you calculate</span>
+      <h2 class="calc-headline">From the back of the napkin to the closing waterfall.</h2>
+      <p class="calc-body">
+        The M&amp;A Advisor domain spans the full lifecycle of a deal: valuing the target, structuring the deal, modeling the returns, and walking the seller through what they actually take home.
+      </p>
+
+      <div class="calc-grid">
+
+        <div class="calc-card">
+          <div class="calc-card-name">Earnings &amp; adjustments</div>
+          <div class="calc-card-desc">Build EBITDA and SDE from financials. Apply add-backs to get to defensible adjusted earnings. Track margins and multi-year trends.</div>
+          <ul class="calc-card-list">
+            <li>EBITDA / SDE build-up</li>
+            <li>Adjusted EBITDA, adjusted SDE</li>
+            <li>Margin analysis, growth rates</li>
+            <li>Trend tables and charts</li>
+          </ul>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-card-name">Valuation</div>
+          <div class="calc-card-desc">EBITDA, SDE, and revenue multiples. DCF with direct cash flows or driver-based projections. Low-mid-high scenario ranges.</div>
+          <ul class="calc-card-list">
+            <li>Multiple-based EV</li>
+            <li>DCF with WACC and terminal value</li>
+            <li>Driver-based DCF projection</li>
+            <li>Valuation range scenarios</li>
+          </ul>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-card-name">Equity value bridge</div>
+          <div class="calc-card-desc">Move from enterprise value to equity value the way the term sheet says: net debt, working capital adjustment against the negotiated peg.</div>
+          <ul class="calc-card-list">
+            <li>Net debt</li>
+            <li>Working capital peg and surplus</li>
+            <li>EV ↔ equity value</li>
+          </ul>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-card-name">LBO returns</div>
+          <div class="calc-card-desc">Size the debt, model the equity check, project the exit. MOIC, IRR, payback, year-one cash-on-cash, full sensitivity grid.</div>
+          <ul class="calc-card-list">
+            <li>Sources and uses</li>
+            <li>Debt sizing and DSCR</li>
+            <li>Buyer equity, MOIC, IRR</li>
+            <li>Entry × exit sensitivity grid</li>
+          </ul>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-card-name">Seller proceeds &amp; tax</div>
+          <div class="calc-card-desc">Purchase price allocation across tangibles, intangibles, non-compete, and goodwill. Three tax rates flow into the seven-row seller waterfall.</div>
+          <ul class="calc-card-list">
+            <li>Advisory fee with floor</li>
+            <li>Purchase price allocation</li>
+            <li>Recapture, ordinary, capital gains</li>
+            <li>Net cash to seller waterfall</li>
+          </ul>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-card-name">Earnouts, synergies &amp; A/D</div>
+          <div class="calc-card-desc">Earnout PV, probability-weighted deal value, capitalized synergy value, strategic price ceilings, and acquirer accretion or dilution.</div>
+          <ul class="calc-card-list">
+            <li>Earnout PV and schedule</li>
+            <li>Probability-weighted deal value</li>
+            <li>Synergy value and price ceiling</li>
+            <li>Pro forma EPS, accretion / dilution</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-section">
+      <span class="how-label">How it works</span>
+      <h2 class="how-headline">Three steps from question to defensible answer.</h2>
+
+      <div class="step-grid">
+
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-title">Ask in M&amp;A vocabulary</div>
+          <div class="step-body">
+            "What's our fee on this $180M deal at modified Lehman?" "What's the buyer's equity check at 6x with $1.5M of senior debt?" "Show me the seller waterfall." TrueMath maps your prompt to the right calculation in the M&amp;A Advisor domain.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-title">Get a deterministic answer</div>
+          <div class="step-body">
+            The PowerOne kernel runs the math precisely. No estimates, no probabilistic guesses. The same inputs always produce the same outputs. Numbers are version-locked and auditable down to the activity that produced them.
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-title">Share with full lineage</div>
+          <div class="step-body">
+            Send the calculation to a counterparty, your client, or your team. They see the same answer, the same inputs, the same activity path. The room can stop arguing about the math and get back to the deal.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FINAL CTA -->
+  <section class="cta-section">
+    <div class="cta-box">
+      <h2 class="cta-headline">The key is TrueMath.</h2>
+      <p class="cta-subhead">AI handles the conversation. TrueMath handles the math.</p>
+      <a href="https://app.truemath.ai/signup" class="btn-cta">Get invited</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <a href="../../" class="footer-logo">
+        <picture>
+          <source srcset="../../TrueMath-Logo-Long-White-500px.png" media="(prefers-color-scheme: dark)">
+          <img src="../../TrueMath-Logo-Long-Color_Logo-Long-Color.png" alt="TrueMath">
+        </picture>
+      </a>
+      <span class="footer-copy">© 2026 TrueMath, Inc.</span>
+    </div>
+    <ul class="footer-links">
+      <li><a href="../../faq.html">FAQ</a></li>
+      <li><a href="../../privacy.html">Privacy</a></li>
+      <li><a href="../../terms.html">Terms</a></li>
+      <li><a href="https://app.truemath.ai/contact">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    (function() {
+      const hamburger = document.getElementById('navHamburger');
+      const menu = document.getElementById('mobileMenu');
+      if (!hamburger || !menu) return;
+
+      function setOpen(open) {
+        hamburger.classList.toggle('is-open', open);
+        menu.classList.toggle('is-open', open);
+        hamburger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+        hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      }
+
+      hamburger.addEventListener('click', function() {
+        setOpen(!hamburger.classList.contains('is-open'));
+      });
+      menu.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') setOpen(false);
+      });
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 960 && hamburger.classList.contains('is-open')) setOpen(false);
+      });
+    })();
+  </script>
+
+</body>
+</html>
