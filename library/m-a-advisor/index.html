@@ -176,11 +176,12 @@
       text-wrap: balance;
     }
     .role-subhead {
-      font-size: 19px;
-      font-weight: 300;
-      line-height: 1.6;
-      color: var(--ink-mid);
-      max-width: 720px;
+      font-size: clamp(22px, 2.6vw, 28px);
+      font-weight: 400;
+      line-height: 1.45;
+      color: var(--ink);
+      max-width: 820px;
+      letter-spacing: -0.005em;
     }
 
     /* ABOUT TRUEMATH */
@@ -213,6 +214,33 @@
       max-width: 880px;
     }
     .about-text strong { color: var(--ink); font-weight: 500; }
+    .about-list {
+      list-style: none;
+      margin: 16px 0 0;
+      padding: 0;
+      max-width: 880px;
+    }
+    .about-list li {
+      position: relative;
+      padding-left: 22px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink-mid);
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+    .about-list li:last-child { margin-bottom: 0; }
+    .about-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 11px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+    }
+    .about-list li strong { color: var(--ink); font-weight: 500; }
 
     /* SAMPLE PROMPT PANEL */
     .sample-section {
@@ -605,7 +633,7 @@
       </span>
       <h1 class="role-headline">M&amp;A Advisor</h1>
       <p class="role-subhead">
-        The valuation, deal structuring, and returns math sell-side and buy-side advisors run on every engagement. Built for the work, ready to defend in the room.
+        AI elevated your research, strategy, and presentations. Unlock its full potential for math that closes the deal.
       </p>
     </section>
 
@@ -613,8 +641,13 @@
     <section class="about-block">
       <span class="about-label">About TrueMath</span>
       <p class="about-text">
-        TrueMath is the <strong>auditable math engine</strong> for AI-age professionals. AI handles the conversation; TrueMath handles the math. Every answer is deterministic, traceable to its inputs, and ready to share. For M&amp;A advisors, that means valuation, returns, and tax math your client and counterparty can both stake their reputations on.
+        TrueMath is the <strong>auditable math engine</strong> for AI-age professionals. AI handles the conversation; TrueMath handles the math.
       </p>
+      <ul class="about-list">
+        <li><strong>Every answer is deterministic.</strong> No hallucinations, no variation.</li>
+        <li><strong>Share the work with your team,</strong> share the results with clients, counterparties, collaborators.</li>
+        <li><strong>Customize pre-made domains</strong> or build your own to support the work you do.</li>
+      </ul>
     </section>
 
     <!-- SAMPLE PROMPT -->
