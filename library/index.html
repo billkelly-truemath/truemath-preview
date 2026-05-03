@@ -89,6 +89,108 @@
     .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
     .nav-links a { font-size: 14px; font-weight: 400; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover { color: var(--ink); }
+
+    /* NAV DROPDOWN */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .nav-chevron {
+      transition: transform 0.2s ease;
+      color: var(--ink-muted);
+    }
+    .nav-dropdown:hover .nav-chevron,
+    .nav-dropdown:focus-within .nav-chevron {
+      transform: rotate(180deg);
+      color: var(--ink);
+    }
+    .nav-dropdown-panel {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: -16px;
+      min-width: 320px;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow:
+        0 12px 40px rgba(26, 24, 48, 0.10),
+        0 2px 8px rgba(26, 24, 48, 0.05);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+      z-index: 110;
+    }
+    .nav-dropdown:hover .nav-dropdown-panel,
+    .nav-dropdown:focus-within .nav-dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
+    }
+    .nav-dropdown::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 12px;
+    }
+    .nav-dropdown-section { padding: 4px 0; }
+    .nav-dropdown-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+    .nav-dropdown-item {
+      display: flex !important;
+      flex-direction: column;
+      gap: 2px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .nav-dropdown-item:hover { background: var(--purple-tint); }
+    .nav-dropdown-item-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink) !important;
+    }
+    .nav-dropdown-item-cat {
+      font-size: 12px;
+      color: var(--ink-muted) !important;
+    }
+
+    /* MOBILE SUBMENU */
+    .mobile-menu-group > a { display: block; }
+    .mobile-submenu {
+      list-style: none;
+      padding: 4px 0 8px 16px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-submenu a {
+      display: block;
+      padding: 8px 4px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-mid);
+      text-decoration: none;
+      border-bottom: none !important;
+    }
+    .mobile-submenu a:hover { color: var(--purple); }
+
     .nav-cta { display: flex; align-items: center; gap: 12px; }
     .btn-ghost { font-family: var(--font-sans); font-size: 14px; color: var(--ink-muted); background: none; border: none; cursor: pointer; text-decoration: none; transition: color 0.2s; }
     .btn-ghost:hover { color: var(--ink); }
@@ -488,7 +590,23 @@
     </a>
     <ul class="nav-links">
       <li><a href="../#why">Why TrueMath</a></li>
-      <li><a href="../#library">Professional Library</a></li>
+      <li class="nav-dropdown">
+        <a href="../#library" class="nav-dropdown-trigger">
+          Professional Library
+          <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <div class="nav-dropdown-panel">
+          <div class="nav-dropdown-section">
+            <div class="nav-dropdown-label">Featured domain</div>
+            <a href="m-a-advisor/" class="nav-dropdown-item">
+              <span class="nav-dropdown-item-name">M&amp;A Advisor</span>
+              <span class="nav-dropdown-item-cat">Investment Banking &amp; Private Capital</span>
+            </a>
+          </div>
+        </div>
+      </li>
       <li><a href="../#developers">Developers</a></li>
       <li><a href="../#about">About</a></li>
       <li><a href="../faq.html">FAQ</a></li>
@@ -506,7 +624,12 @@
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <ul class="mobile-menu-links">
       <li><a href="../#why">Why TrueMath</a></li>
-      <li><a href="../#library">Professional Library</a></li>
+      <li class="mobile-menu-group">
+        <a href="../#library">Professional Library</a>
+        <ul class="mobile-submenu">
+          <li><a href="m-a-advisor/">M&amp;A Advisor</a></li>
+        </ul>
+      </li>
       <li><a href="../#developers">Developers</a></li>
       <li><a href="../#about">About</a></li>
       <li><a href="../faq.html">FAQ</a></li>
