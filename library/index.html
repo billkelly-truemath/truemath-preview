@@ -205,6 +205,47 @@
       background: var(--purple);
     }
 
+    .library-hero-cta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+    .btn-primary-lg {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--purple);
+      border: none;
+      border-radius: 10px;
+      padding: 13px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-primary-lg:hover {
+      background: var(--purple-bright);
+      transform: translateY(-1px);
+    }
+    .btn-ghost-lg {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: inline-flex;
+      align-items: center;
+      padding: 13px 8px;
+    }
+    .btn-ghost-lg:hover { color: var(--purple); }
+
     /* CATEGORY SECTIONS */
     .category-section {
       max-width: 1160px;
@@ -346,6 +387,38 @@
       color: var(--ink-muted);
     }
 
+    /* SUGGEST A DOMAIN */
+    .suggest-section {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 32px 64px 80px;
+    }
+    .suggest-block {
+      background: var(--bg-tint-warm);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--purple);
+      border-radius: 4px;
+      padding: 40px 48px;
+      max-width: 720px;
+    }
+    .suggest-headline {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+    .suggest-body {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-mid);
+      font-weight: 300;
+      margin-bottom: 24px;
+      max-width: 580px;
+    }
+
     /* CTA SECTION (mirrors home page) */
     .cta-section { padding: 96px 64px; text-align: center; background: #0F0E1A; position: relative; overflow: hidden; margin-top: 56px; }
     .cta-section::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 400px; background: radial-gradient(ellipse, rgba(107,68,196,0.3) 0%, transparent 65%); pointer-events: none; }
@@ -388,6 +461,8 @@
       .library-hero { padding: 56px 24px 40px; }
       .section { padding: 60px 24px; }
       .category-section { padding: 0 24px 40px; }
+      .suggest-section { padding: 24px 24px 60px; }
+      .suggest-block { padding: 28px 24px; }
       .cta-section { padding: 60px 24px; }
       footer { padding: 24px; }
     }
@@ -457,7 +532,7 @@
       <div class="library-meta">
         <div class="library-meta-item">
           <span class="library-meta-dot"></span>
-          <span>19 domains across 9 categories</span>
+          <span>Curated for specific professional roles</span>
         </div>
         <div class="library-meta-item">
           <span class="library-meta-dot"></span>
@@ -467,6 +542,10 @@
           <span class="library-meta-dot"></span>
           <span>New domains added regularly</span>
         </div>
+      </div>
+      <div class="library-hero-cta">
+        <a href="https://app.truemath.ai/signup" class="btn-primary-lg">Get invited</a>
+        <a href="https://app.truemath.ai/contact" class="btn-ghost-lg">Talk to us</a>
       </div>
     </section>
 
@@ -746,6 +825,17 @@
           <svg class="domain-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
 
+      </div>
+    </section>
+
+    <!-- SUGGEST A DOMAIN -->
+    <section class="suggest-section">
+      <div class="suggest-block">
+        <h2 class="suggest-headline">Don't see your role?</h2>
+        <p class="suggest-body">
+          The Library is built around real practitioner work. If you do work that depends on math we haven't built yet, tell us. Most domains in the Library started as a request from someone like you.
+        </p>
+        <a href="https://app.truemath.ai/contact" class="btn-primary-lg">Suggest a domain</a>
       </div>
     </section>
 
