@@ -142,6 +142,131 @@
     .nav-links a { font-size: 14px; font-weight: 400; color: var(--ink-muted); text-decoration: none; transition: color 0.2s; }
     .nav-links a:hover { color: var(--ink); }
 
+    /* NAV DROPDOWN */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .nav-chevron {
+      transition: transform 0.2s ease;
+      color: var(--ink-muted);
+    }
+    .nav-dropdown:hover .nav-chevron,
+    .nav-dropdown:focus-within .nav-chevron {
+      transform: rotate(180deg);
+      color: var(--ink);
+    }
+    .nav-dropdown-panel {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: -16px;
+      min-width: 320px;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow:
+        0 12px 40px rgba(26, 24, 48, 0.10),
+        0 2px 8px rgba(26, 24, 48, 0.05);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+      z-index: 110;
+    }
+    .nav-dropdown:hover .nav-dropdown-panel,
+    .nav-dropdown:focus-within .nav-dropdown-panel {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0s;
+    }
+    /* invisible bridge so cursor can move from trigger to panel without losing hover */
+    .nav-dropdown::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 12px;
+    }
+    .nav-dropdown-section { padding: 4px 0; }
+    .nav-dropdown-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+    .nav-dropdown-item {
+      display: flex !important;
+      flex-direction: column;
+      gap: 2px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .nav-dropdown-item:hover { background: var(--purple-tint); }
+    .nav-dropdown-item-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink) !important;
+    }
+    .nav-dropdown-item-cat {
+      font-size: 12px;
+      color: var(--ink-muted) !important;
+    }
+    .nav-dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 8px 0;
+    }
+    .nav-dropdown-browse {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--purple) !important;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+    .nav-dropdown-browse:hover {
+      background: var(--purple-tint);
+      color: var(--purple) !important;
+    }
+    .nav-dropdown-browse svg { transition: transform 0.2s ease; }
+    .nav-dropdown-browse:hover svg { transform: translateX(2px); }
+
+    /* MOBILE SUBMENU */
+    .mobile-menu-group > a { display: block; }
+    .mobile-submenu {
+      list-style: none;
+      padding: 4px 0 8px 16px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mobile-submenu a {
+      display: block;
+      padding: 8px 4px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-mid);
+      text-decoration: none;
+      border-bottom: none !important;
+    }
+    .mobile-submenu a:hover { color: var(--purple); }
+
     .nav-cta { display: flex; align-items: center; gap: 12px; }
 
     .btn-ghost { font-family: var(--font-sans); font-size: 14px; color: var(--ink-muted); background: none; border: none; cursor: pointer; text-decoration: none; transition: color 0.2s; }
@@ -316,7 +441,24 @@
 
     /* LIBRARY */
     .category-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 44px; }
-    .category-tag { font-size: 12px; font-weight: 500; color: var(--purple); background: var(--purple-tint); border: 1px solid var(--border-purple); border-radius: 100px; padding: 4px 13px; white-space: nowrap; }
+    .category-tag {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--purple);
+      background: var(--purple-tint);
+      border: 1px solid var(--border-purple);
+      border-radius: 100px;
+      padding: 4px 13px;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+    a.category-tag:hover {
+      background: var(--purple);
+      color: #fff;
+      border-color: var(--purple);
+      transform: translateY(-1px);
+    }
 
     .library-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
 
@@ -481,6 +623,20 @@
       display: flex;
       flex-direction: column;
     }
+
+    /* Clickable variant: cards that link to a role page */
+    a.vignette-card-link {
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease;
+    }
+    a.vignette-card-link:hover { transform: translateY(-3px); }
+    a.vignette-card-link:hover .session-panel {
+      box-shadow:
+        0 24px 72px rgba(62, 31, 143, 0.38),
+        0 4px 12px rgba(62, 31, 143, 0.20);
+    }
+    a.vignette-card-link:hover .role-label { color: var(--purple); }
 
     /* SESSION PANEL */
     .session-panel {
@@ -733,6 +889,36 @@
       background: var(--purple);
     }
 
+    /* BROWSE LIBRARY LINK */
+    .library-browse-row {
+      display: flex;
+      justify-content: center;
+      padding: 36px 0 8px;
+    }
+    .library-browse-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--purple);
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 100px;
+      border: 1px solid var(--border-purple);
+      background: transparent;
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .library-browse-link:hover {
+      background: var(--purple-tint);
+      color: var(--purple);
+      border-color: var(--purple);
+      transform: translateY(-1px);
+    }
+    .library-browse-link svg { transition: transform 0.2s; }
+    .library-browse-link:hover svg { transform: translateX(2px); }
+
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .vignettes-section { padding: 0 24px; }
@@ -751,7 +937,30 @@
     </a>
     <ul class="nav-links">
       <li><a href="#why">Why TrueMath</a></li>
-      <li><a href="#library">Professional Library</a></li>
+      <li class="nav-dropdown">
+        <a href="#library" class="nav-dropdown-trigger">
+          Professional Library
+          <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <div class="nav-dropdown-panel">
+          <div class="nav-dropdown-section">
+            <div class="nav-dropdown-label">Featured domain</div>
+            <a href="library/m-a-advisor/" class="nav-dropdown-item">
+              <span class="nav-dropdown-item-name">M&amp;A Advisor</span>
+              <span class="nav-dropdown-item-cat">Investment Banking &amp; Private Capital</span>
+            </a>
+          </div>
+          <div class="nav-dropdown-divider"></div>
+          <a href="library/" class="nav-dropdown-browse">
+            Browse the full Library
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M4 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </li>
       <li><a href="#developers">Developers</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="faq.html">FAQ</a></li>
@@ -772,7 +981,13 @@
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <ul class="mobile-menu-links">
       <li><a href="#why">Why TrueMath</a></li>
-      <li><a href="#library">Professional Library</a></li>
+      <li class="mobile-menu-group">
+        <a href="#library">Professional Library</a>
+        <ul class="mobile-submenu">
+          <li><a href="library/m-a-advisor/">M&amp;A Advisor</a></li>
+          <li><a href="library/">Browse the full Library</a></li>
+        </ul>
+      </li>
       <li><a href="#developers">Developers</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="faq.html">FAQ</a></li>
@@ -886,15 +1101,15 @@
       <p class="section-body">Calculation domains built for the work you and your team already do, ready the moment you sign in. Use, share, and customize, as a sole contributor and as a team.</p>
 
       <div class="category-strip">
-        <span class="category-tag">Financial Advisory</span>
-        <span class="category-tag">Investment Banking &amp; Private Capital</span>
-        <span class="category-tag">Corporate Finance</span>
-        <span class="category-tag">Real Estate</span>
-        <span class="category-tag">Construction</span>
-        <span class="category-tag">Cloud &amp; Tech</span>
-        <span class="category-tag">Insurance</span>
-        <span class="category-tag">Legal &amp; Advisory</span>
-        <span class="category-tag">Healthcare</span>
+        <a href="library/" class="category-tag">Financial Advisory</a>
+        <a href="library/" class="category-tag">Investment Banking &amp; Private Capital</a>
+        <a href="library/" class="category-tag">Corporate Finance</a>
+        <a href="library/" class="category-tag">Real Estate</a>
+        <a href="library/" class="category-tag">Construction</a>
+        <a href="library/" class="category-tag">Cloud &amp; Tech</a>
+        <a href="library/" class="category-tag">Insurance</a>
+        <a href="library/" class="category-tag">Legal &amp; Advisory</a>
+        <a href="library/" class="category-tag">Healthcare</a>
       </div>
 
       <!-- CAROUSEL -->
@@ -961,8 +1176,8 @@
       </div>
       </div>
 
-      <!-- CARD 3: M&A Advisor -->
-      <div class="vignette-card">
+      <!-- CARD 3: M&A Advisor (clickable -- role page exists) -->
+      <a href="library/m-a-advisor/" class="vignette-card vignette-card-link">
         <div class="session-panel">
           <div class="session-content">
             <div class="prompt-row">
@@ -989,7 +1204,7 @@
           <div class="role-label">M&amp;A Advisor</div>
           <div class="role-category">Investment Banking &amp; Private Capital</div>
       </div>
-      </div>
+      </a>
 
       <!-- CARD 4: Estate Planner -->
       <div class="vignette-card">
@@ -1108,6 +1323,16 @@
     <div class="carousel-dots" id="dots"></div>
   </div>
 </div>
+
+      <!-- BROWSE LIBRARY CTA -->
+      <div class="library-browse-row">
+        <a href="library/" class="library-browse-link">
+          Explore the whole Library
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
 
       </div>
     </div>
