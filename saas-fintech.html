@@ -325,8 +325,14 @@
     /* COMPARISON */
     .compare-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1.4fr;
       gap: 16px;
+      align-items: start;
+    }
+    .compare-grid-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .compare-card {
       background: var(--bg-white);
@@ -336,6 +342,20 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
+    }
+    .compare-card.is-compact {
+      padding: 22px 24px;
+      opacity: 0.85;
+    }
+    .compare-card.is-compact .compare-card-title {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .compare-card-summary {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--ink-mid);
+      font-weight: 300;
     }
     .compare-card.is-truemath {
       background: var(--purple-tint);
@@ -595,52 +615,24 @@
     <div class="section">
       <span class="section-label">Why the usual paths fail</span>
       <h2 class="section-headline">Generic LLM, build-it-yourself, or <em>TrueMath.</em></h2>
-      <p class="section-body">The first two paths look fast on day one and break by the time model risk review begins. TrueMath is the path that survives the audit.</p>
+      <p class="section-body">Two of these paths look fast on day one and stall by the time model risk review begins. The third is the path that survives the audit.</p>
 
       <div class="compare-grid">
 
-        <div class="compare-card">
-          <div class="compare-card-header">Option 1</div>
-          <div class="compare-card-title">Generic LLM</div>
+        <div class="compare-grid-left">
 
-          <div class="compare-row">
-            <div class="compare-row-label">Reproducibility</div>
-            <div class="compare-row-text">Same prompt, different answer tomorrow. Impossible to audit.</div>
+          <div class="compare-card is-compact">
+            <div class="compare-card-header">Option 1</div>
+            <div class="compare-card-title">Generic LLM</div>
+            <div class="compare-card-summary">Same prompt, different answer tomorrow. No provenance, no audit trail. Fast to prototype, never passes model risk review.</div>
           </div>
-          <div class="compare-row">
-            <div class="compare-row-label">Model risk</div>
-            <div class="compare-row-text">No audit trail. Your model risk team blocks launch. Indefinitely.</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-row-label">Methodology</div>
-            <div class="compare-row-text">Black box. Cannot reflect your underwriting logic or edge cases.</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-row-label">Time to ship</div>
-            <div class="compare-row-text">Fast to prototype. Never passes compliance review.</div>
-          </div>
-        </div>
 
-        <div class="compare-card">
-          <div class="compare-card-header">Option 2</div>
-          <div class="compare-card-title">Build it yourself</div>
+          <div class="compare-card is-compact">
+            <div class="compare-card-header">Option 2</div>
+            <div class="compare-card-title">Build it yourself</div>
+            <div class="compare-card-summary">Six to eighteen months of engineering before the first calculation ships. Your engineers become a calculation team. The product roadmap pays the cost.</div>
+          </div>
 
-          <div class="compare-row">
-            <div class="compare-row-label">Reproducibility</div>
-            <div class="compare-row-text">Deterministic in theory. 18 months to actually get there.</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-row-label">Model risk</div>
-            <div class="compare-row-text">Audit trail you build, maintain, and re-justify on every release.</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-row-label">Methodology</div>
-            <div class="compare-row-text">Fully custom. But your engineers become a calculation team. Roadmap slips. Talent leaves.</div>
-          </div>
-          <div class="compare-row">
-            <div class="compare-row-label">Time to ship</div>
-            <div class="compare-row-text">Six to eighteen months if nothing breaks. Something always breaks.</div>
-          </div>
         </div>
 
         <div class="compare-card is-truemath">
